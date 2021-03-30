@@ -1,8 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:origin/DatabaseService.dart';
 import 'package:origin/afterlogin.dart';
 import 'package:origin/flutter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+
+import 'User.dart';
 class validate extends StatefulWidget {
   @override
   _validateState createState() => _validateState();
@@ -103,6 +107,12 @@ class _validateState extends State<validate> {
                       width:200,height:65,
                       decoration: BoxDecoration(border: Border.all(color: Colors.white,width: 4),borderRadius: BorderRadius.circular(8),boxShadow: [new BoxShadow(color: Colors.green,offset: new Offset(6.0, 6.0))]),margin: EdgeInsets.fromLTRB(0, 30, 0, 0),child: RaisedButton(onPressed: () async{if(formkey.currentState.validate()){print("inside");shouldNavigate = await register(email.text, pass.text );
                   if( shouldNavigate){
+                    UserObj user=UserObj(
+                      name: username.value.text,
+                      items: [],
+                      uid: FirebaseAuth.instance.currentUser.uid,
+                    );
+                    DatabaseService(FirebaseAuth.instance.currentUser.uid).CreateUser(user);
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => Home()));
                   }
                   }},color: Color(0xff0091EA),textColor: Colors.white, child: Text('Signup',style: TextStyle(fontSize: 30),),)),
