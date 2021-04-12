@@ -3,9 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:origin/DatabaseService.dart';
+import 'package:origin/User.dart';
 
 FirebaseAuth auth = FirebaseAuth.instance;
 final gogleSignIn = GoogleSignIn();
+
 
 Future<bool> googleSignIn() async {
   GoogleSignInAccount googleSignInAccount = await gogleSignIn.signIn();
@@ -17,9 +20,9 @@ Future<bool> googleSignIn() async {
         accessToken: googleSignInAuthentication.accessToken);
 
     UserCredential result = await auth.signInWithCredential(credential);
-
     User user = await auth.currentUser;
     print(user.uid);
+    DatabaseService(user.uid).CreateUser(UserObj(name:user.displayName,uid:user.uid,items:[]));
     return Future.value(true);
   }
 }
