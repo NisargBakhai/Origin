@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
-
+import 'package:origin/AfterScan.dart';
+import './User.dart';
+import 'package:provider/provider.dart';
 
 class Camera extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-
         debugShowCheckedModeBanner: false,
         home: MyHomePage(title: 'Scan BarCode and QR'),
-        theme: new ThemeData(scaffoldBackgroundColor: Colors.black)
-    );
+        theme: new ThemeData(scaffoldBackgroundColor: Colors.black));
   }
 }
-
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -35,41 +33,39 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  String _counter,_value = "";
+  String _counter, _value = "";
+  UserObj user;
 
-  Future _incrementCounter() async{
+  Future _incrementCounter() async {
+    _counter = await FlutterBarcodeScanner.scanBarcode(
+        "#004297", "Cancel", true, ScanMode.DEFAULT);
 
-    _counter= await FlutterBarcodeScanner.scanBarcode("#004297", "Cancel", true, ScanMode.DEFAULT);
-
-
-    setState(() {
-      _value=_counter;
-    });
-
-
+    // setState(() {
+    //   _value=_counter;
+    //   print(_value.split('\n').first);
+    // });
+    _value=_counter;
+    Navigator.of(context).push(
+        MaterialPageRoute(builder: (context) => AfterScan(scanvalue: _value,user: user,)));
   }
 
   @override
   Widget build(BuildContext context) {
-
+    user=Provider.of<UserObj>(context);
     return Scaffold(
-
       body: Center(
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              'Tap to open camera',
+              'Tap To Open Camera',
               style: TextStyle(
                   fontSize: 20,
                   color: Colors.white,
-                  fontWeight: FontWeight.bold
-              ),
+                  fontWeight: FontWeight.bold),
             ),
-
           ],
         ),
       ),
